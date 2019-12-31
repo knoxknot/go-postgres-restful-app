@@ -8,11 +8,11 @@ Again I will showcasing this on an ubuntu operating system. Thus we begin by ins
 **Creating Initial Operations on the Database**  
 `sudo -u postgres psql` # log in with default postgres user and run the below commands
 
-CREATE DATABASE bookstore CONNECTION LIMIT 5;
-CREATE USER developer WITH PASSWORD 'p@ssW0rd';
-ALTER ROLE developer SET client_encoding TO 'utf8';
-ALTER ROLE developer SET default_transaction_isolation TO 'read committed';
-ALTER ROLE developer  SET timezone TO 'UTC';
+CREATE DATABASE bookstore CONNECTION LIMIT 5;  
+CREATE USER developer WITH PASSWORD 'p@ssW0rd';  
+ALTER ROLE developer SET client_encoding TO 'utf8';  
+ALTER ROLE developer SET default_transaction_isolation TO 'read committed';  
+ALTER ROLE developer  SET timezone TO 'UTC';  
 GRANT ALL PRIVILEGES ON DATABASE bookstore TO developer;
 
 **RUN** commands below to generate the sql statement and import data into database  
