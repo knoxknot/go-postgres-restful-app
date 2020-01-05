@@ -1,18 +1,18 @@
 # A Restful Boostore App with a Database Datastore
 
-Again I will showcasing this on an ubuntu operating system. Thus we begin by install and starting postgresql
+Again I will be showcasing this on an ubuntu operating system. Thus we begin by installing and starting postgresql
 
 `echo "y" | sudo apt install postgresql postgresql-contrib`  
-`sudo service postgres start`
+`sudo service postgresql start`
 
 **Creating Initial Operations on the Database**  
 `sudo -u postgres psql` # log in with default postgres user and run the below commands
 
 CREATE DATABASE bookstore CONNECTION LIMIT 5;  
-CREATE USER developer WITH PASSWORD 'p@ssW0rd';  
+CREATE USER developer WITH PASSWORD 'p2ssW0rd';  
 ALTER ROLE developer SET client_encoding TO 'utf8';  
 ALTER ROLE developer SET default_transaction_isolation TO 'read committed';  
-ALTER ROLE developer  SET timezone TO 'UTC';  
+ALTER ROLE developer SET timezone TO 'UTC';  
 GRANT ALL PRIVILEGES ON DATABASE bookstore TO developer;
 
 **RUN** commands below to generate the sql statement and import data into database  
