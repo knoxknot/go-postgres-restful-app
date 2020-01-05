@@ -135,11 +135,49 @@ func booksCreate(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func booksUpdate(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "PUT" {
+		http.Error(w, http.StatusText(405), 405)
+		return
+	}
+
+}
+
+func booksDelete(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "DELETE" {
+		http.Error(w, http.StatusText(405), 405)
+		return
+	}
+
+	isbn := r.FormValue("isbn")
+	if isbn == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	result, err := db.Exec("DELETE FROM books WHERE isbn = $1", isbn)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	fmt.Fprintf(w, "Book %s deleted successfully (%d row affected)\n", isbn, rowsAffected)
+
+}
+
 func main() {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
 	api.HandleFunc("/books", booksIndex).Methods("GET")
 	api.HandleFunc("/books/show", booksShow).Methods("GET")
 	api.HandleFunc("/books/create", booksCreate).Methods("POST")
+	api.HandleFunc("/books/update", booksUpdate).Methods("PUT")
+	api.HandleFunc("/books/delete", booksDelete).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
