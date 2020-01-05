@@ -24,4 +24,5 @@ GRANT ALL PRIVILEGES ON DATABASE bookstore TO developer;
 #### Testing with Curl for Raw Data   
 
 - curl -X GET localhost:8080/api/v1/books
+- curl -X GET localhost:8080/api/v1/books/show?isbn=978-1470184841
 -	curl -i -X POST -d "isbn=978-1470184841&title=Metamorphosis&author=Franz Kafka&price=5.90" localhost:8080/api/v1/books/create
