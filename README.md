@@ -6,19 +6,18 @@ Again I will be showcasing this on an ubuntu operating system. Thus we begin by 
 `sudo service postgresql start`
 
 **Creating Initial Operations on the Database**  
-`sudo -u postgres psql` # log in with default postgres user and run the below commands
-
-CREATE DATABASE bookstore CONNECTION LIMIT 5;  
-CREATE USER developer WITH PASSWORD 'p2ssW0rd';  
-ALTER ROLE developer SET client_encoding TO 'utf8';  
-ALTER ROLE developer SET default_transaction_isolation TO 'read committed';  
-ALTER ROLE developer SET timezone TO 'UTC';  
-GRANT ALL PRIVILEGES ON DATABASE bookstore TO developer;
-
+`sudo -u postgres psql`  # log in with default postgres user and run the below commands  
+<code>
+ CREATE DATABASE bookstore CONNECTION LIMIT 10;  <br>
+ CREATE USER developer WITH PASSWORD 'p2ssW0rd'; <br>
+ ALTER ROLE developer SET client_encoding TO 'utf8'; <br>
+ ALTER ROLE developer SET default_transaction_isolation TO 'read committed'; <br>
+ ALTER ROLE developer SET timezone TO 'UTC'; <br>
+ GRANT ALL PRIVILEGES ON DATABASE bookstore TO developer; <br>
+ \q
+</code>  
 **RUN** commands below to generate the sql statement and import data into database  
-
-`sudo -u postgres`  
-`psql 'postgres://developer:p2ssW0rd@localhost:5432/bookstore' < bookstore.sql`
+`sudo -u postgres psql 'postgres://developer:p2ssW0rd@localhost:5432/bookstore' < bookstore.sql`
 
 
 #### Testing with Curl for Raw Data   
