@@ -18,6 +18,7 @@ type Book struct {
 	author  string
 	price   float32
 	created time.Time
+	updated time.Time
 }
 
 var db *sql.DB
@@ -52,7 +53,7 @@ func booksIndex(w http.ResponseWriter, r *http.Request) {
 	books := make([]*Book, 0)
 	for rows.Next() {
 		book := new(Book)
-		err := rows.Scan(&book.isbn, &book.title, &book.author, &book.price, &book.created)
+		err := rows.Scan(&book.isbn, &book.title, &book.author, &book.price, &book.created, &book.updated)
 		if err = rows.Err(); err != nil {
 			http.Error(w, http.StatusText(500), 500)
 			return
@@ -66,7 +67,7 @@ func booksIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, book := range books {
-		fmt.Fprintf(w, "%s, %s, %s, $%.2f, %s\n", book.isbn, book.title, book.author, book.price, book.created)
+		fmt.Fprintf(w, "%s, %s, %s, $%.2f, %s, %s\n", book.isbn, book.title, book.author, book.price, book.created, book.updated)
 	}
 
 }
@@ -86,7 +87,7 @@ func booksShow(w http.ResponseWriter, r *http.Request) {
 	row := db.QueryRow("SELECT * FROM books WHERE isbn = $1", isbn)
 
 	book := new(Book)
-	err := row.Scan(&book.isbn, &book.title, &book.author, &book.price, &book.created)
+	err := row.Scan(&book.isbn, &book.title, &book.author, &book.price, &book.created, &book.updated)
 	if err == sql.ErrNoRows {
 		http.NotFound(w, r)
 		return
@@ -95,7 +96,7 @@ func booksShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "%s, %s, %s, $%.2f, %s\n", book.isbn, book.title, book.author, book.price, book.created)
+	fmt.Fprintf(w, "%s, %s, %s, $%.2f, %s, %s\n", book.isbn, book.title, book.author, book.price, book.created, book.updated)
 
 }
 
@@ -118,8 +119,9 @@ func booksCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	created := time.Now()
+	updated := time.Now()
 
-	result, err := db.Exec("INSERT INTO books VALUES($1, $2, $3, $4, $5)", isbn, title, author, price, created)
+	result, err := db.Exec("INSERT INTO books VALUES($1, $2, $3, $4, $5, $6)", isbn, title, author, price, created, updated)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 		return
@@ -148,7 +150,7 @@ func booksUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(400), 400)
 		return
 	}
-	
+
 	price, err := strconv.ParseFloat(r.FormValue("price"), 32)
 	if err != nil {
 		http.Error(w, http.StatusText(400), 400)
@@ -156,8 +158,9 @@ func booksUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	created := time.Now()
+	updated := time.Now() //db.QueryRow("SELECT updated FROM books WHERE isbn = $1", isbn).Scan()
 
-	result, err := db.Exec("UPDATE books SET isbn = $1, title = $2, author = $3, price = $4, created = $5 WHERE isbn = $1", isbn, title, author, price, created)
+	result, err := db.Exec("UPDATE books SET isbn = $1, title = $2, author = $3, price = $4, created = $5, updated = $6 WHERE isbn = $1", isbn, title, author, price, created, updated)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 		return
