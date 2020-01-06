@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS books (
   isbn    char(14) NOT NULL PRIMARY KEY,
   title   varchar(255) NOT NULL,
   author  varchar(255) NOT NULL,
-  price   decimal(5,2) NOT NULL,
+  price   decimal(5,2) NOT NULL DEFAULT 0.00,
   created timestamp with time zone DEFAULT current_timestamp
 );
 	
