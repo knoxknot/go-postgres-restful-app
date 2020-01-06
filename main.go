@@ -141,6 +141,36 @@ func booksUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	isbn := r.FormValue("isbn")
+	title := r.FormValue("title")
+	author := r.FormValue("author")
+	if isbn == "" || title == "" || author == "" {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+	
+	price, err := strconv.ParseFloat(r.FormValue("price"), 32)
+	if err != nil {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	created := time.Now()
+
+	result, err := db.Exec("UPDATE books SET isbn = $1, title = $2, author = $3, price = $4, created = $5 WHERE isbn = $1", isbn, title, author, price, created)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	fmt.Fprintf(w, "Book %s updated successfully (%d row affected)\n", isbn, rowsAffected)
+
 }
 
 func booksDelete(w http.ResponseWriter, r *http.Request) {
